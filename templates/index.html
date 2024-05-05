@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>🖼️ Remove Background</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .drop-zone {
+        border: 3px dashed #6c757d;
+        padding: 40px;
+        width: 500px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: white;
+        border-radius: 10px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .drop-zone.dragover {
+        background: #f1f1f1;
+        transform: scale(1.05);
+      }
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        color: #495057;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      input[type="submit"] {
+        padding: 10px 20px;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      input[type="submit"]:hover {
+        background: #495057;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dropZone" class="drop-zone">
+      <h1>🖼️ Remove Background</h1>
+      <form
+        id="uploadForm"
+        action="/"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input id="fileInput" type="file" name="file" required />
+        <input type="submit" value="Upload" />
+      </form>
+    </div>
+
+    <script>
+      let dropZone = document.getElementById('dropZone');
+      let fileInput = document.getElementById('fileInput');
+      let uploadForm = document.getElementById('uploadForm');
+
+      dropZone.addEventListener('click', function () {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+          uploadForm.submit();
+        }
+      });
+
+      uploadForm.addEventListener('submit', function (e) {
+        if (fileInput.files.length === 0) {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
+
+      dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', function (e) {
+        this.classList.remove('dragover');
+      });
+
+      dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+        let file = e.dataTransfer.files[0];
+        fileInput.files = e.dataTransfer.files;
+        uploadForm.submit();
+      });
+    </script>
+  </body>
+</html>
